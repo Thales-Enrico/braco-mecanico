@@ -36,7 +36,7 @@ void serialRead(String command) {
         sign = (command.charAt(i*4) == '-') ? -1 : 1;
         value = command.substring(i*4 + 1, i*4 + 4).toInt() * sign;
 
-        if(value > maxServos[i]) value = maxServos[i];
+        if(abs(value) > maxServos[i]) value = maxServos[i];
 
         writeServos(i, value);
     }
