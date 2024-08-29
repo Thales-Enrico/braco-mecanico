@@ -30,7 +30,7 @@ void loop() {
     }
 }
 void serialRead(String command) {
-    // emxemplo: -010+000+000-100+000+000+000
+    // exemplo: -010+000+000-100+000+000+000
     int sign, value, speed;
     for (int i = 0; i < NUM_SERVOS; i++){
         sign = (command.charAt(i*4) == '-') ? -1 : 1;
