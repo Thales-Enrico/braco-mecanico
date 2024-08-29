@@ -31,7 +31,7 @@ void loop() {
 }
 void serialRead(String command) {
     // exemplo: -010+000+000-100+000+000+000
-    int sign, value, speed;
+    int sign, value;
     for (int i = 0; i < NUM_SERVOS; i++){
         sign = (command.charAt(i*4) == '-') ? -1 : 1;
         value = command.substring(i*4 + 1, i*4 + 4).toInt() * sign;
