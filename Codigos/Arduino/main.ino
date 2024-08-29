@@ -2,6 +2,15 @@
 #include <Adafruit_PWMServoDriver.h>
 
 #define NUM_SERVOS 7
+#define MAX_SERVO1 180
+#define MAX_SERVO2 180
+#define MAX_SERVO3 180
+#define MAX_SERVO4 180
+#define MAX_SERVO5 180
+#define MAX_SERVO6 180
+#define MAX_SERVO7 180
+int maxServos[NUM_SERVOS] = {MAX_SERVO1, MAX_SERVO2,
+    MAX_SERVO3, MAX_SERVO4, MAX_SERVO5, MAX_SERVO6, MAX_SERVO7};
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -15,19 +24,23 @@ void setup() {
 }
 
 void loop() {
-  
-}
-void serialRead(String command, int nServo) {
-    while (command.length() > 0) {
-        int motorIndex = command.charAt(0 + (nServo * 3)) - '0'; 
-        int sign = (command.charAt(1) == '-') ? -1 : 1; 
-        int value = command.substring(2, 5).toInt(); 
-        int speed = sign * value; 
-
-        moveServo(motorIndex, speed);
-
-        command = command.substring(5); 
+  if (Serial.available() > 0) {
+        String command = Serial.readStringUntil('\n'); 
+        serialRead(command);
     }
+}
+void serialRead(String command) {
+    // emxemplo: -010+000+000-100+000+000+000
+    int sign, value, speed;
+    for (int i = 0; i < NUM_SERVOS; i++){
+        sign = (command.charAt(i*4) == '-') ? -1 : 1;
+        value = command.substring(i*4 + 1, i*4 + 4).toInt() * sign;
+
+        if(value > maxServos[i]) value = maxServos[i];
+
+        writeServos(i, value);
+    }
+
 }
 
 void writeServos(int nServo, int position) {
@@ -49,8 +62,8 @@ void writeServos(int nServo, int position) {
 
 void beginServos() {
 
-    #define Frequency 50    
+    #define FREQUENCY 50    
 
     pwm.begin(); 
-    pwm.setPWMFreq(Frequency); 
+    pwm.setPWMFreq(FREQUENCY); 
 }
